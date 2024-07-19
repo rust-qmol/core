@@ -1,4 +1,4 @@
-use crate::{io::PERIODIC_TABLE, num::Float};
+use crate::{io::PERIODIC_TABLE, num::float::Float};
 
 use super::{Atom, AtomCharg, AtomNuc};
 

@@ -1,4 +1,4 @@
-use super::Float;
+use super::float::Float;
 
 pub fn autoaa<T: Float>(x: T) -> T {
     x * 0.52917726.into()

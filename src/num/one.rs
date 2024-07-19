@@ -1,5 +1,7 @@
 use std::ops::{Add, Mul};
 
+use super::{complex::Complex, float::Float};
+
 pub trait One:
     Sized + Add<Output = Self> + Mul<Output = Self> + Mul<Self, Output = Self>
 {
@@ -27,3 +29,15 @@ impl One for f64 {
     }
 }
 
+impl<T: Float> One for Complex<T> {
+    fn one() -> Self {
+        Self { re: T::one(), im: T::zero() }
+    }
+    fn is_one(&self) -> bool {
+        self.re.is_one() && self.im.is_zero()
+    }
+    
+    fn set_one(&mut self) {
+        *self = One::one();
+    }
+}

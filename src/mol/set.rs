@@ -1,4 +1,4 @@
-use crate::{mol::BigMolNuc, num::Float};
+use crate::{mol::BigMolNuc, num::float::Float};
 
 use super::{MolCharg, Molecule, Spin};
 

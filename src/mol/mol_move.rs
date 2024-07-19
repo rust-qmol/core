@@ -1,4 +1,4 @@
-use crate::num::Float;
+use crate::num::float::Float;
 
 use super::Molecule;
 

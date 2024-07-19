@@ -2,7 +2,8 @@ mod atm_move;
 mod prop;
 mod set;
 
-use crate::num::Float;
+use crate::num::float::Float;
+
 
 pub type AtomCharg = i8;
 pub type AtomNuc = u8;

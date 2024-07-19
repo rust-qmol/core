@@ -1,6 +1,5 @@
 use crate::{
-    atom::{Atom, CoordinatesLike},
-    num::Float,
+    atom::{Atom, CoordinatesLike}, num::float::Float,
 };
 
 use super::{rotate::rotate, BigMolNuc, MolCharg, MolNuc, Molecule, Spin};

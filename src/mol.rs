@@ -4,7 +4,7 @@ mod prop;
 mod rotate;
 mod set;
 
-use crate::{atom::Atom, num::Float};
+use crate::{atom::Atom, num::float::Float};
 
 pub type MolCharg = i8;
 pub type MolNuc = u16;

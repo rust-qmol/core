@@ -1,58 +1,60 @@
 mod one;
 mod zero;
+
 pub mod convert;
 
-use std::{
-    fmt::{Debug, Display},
-    iter::Sum,
-    ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign},
-    str::FromStr,
-};
+pub mod float;
+pub mod complex;
 
-use one::One;
-use zero::Zero;
 
-pub trait Float
+use std::fmt::Debug;
+use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign};
+
+use crate::num::{complex::Complex, one::One, zero::Zero};
+
+pub trait Num
 where
-    Self: Display + Debug,
-    Self: Copy,
-    Self: FromStr,
-    Self: From<f32>,
-    Self: From<u8> + From<u16>,
-    Self: From<i8> + From<i16>,
     Self: Zero + One,
-    Self: Neg<Output = Self>,
-    Self: Add<Output = Self> + AddAssign,
-    Self: Sub<Output = Self> + SubAssign,
-    Self: Div<Output = Self> + DivAssign,
-    Self: Mul<Output = Self> + MulAssign,
-    Self: PartialOrd,
-    Self: Sum,
+    Self: Debug + Copy,
+    Self: Neg<Output=Self>,
+    Self: Add<Output=Self> + AddAssign,
+    Self: Sub<Output=Self> + SubAssign,
+    Self: Div<Output=Self> + DivAssign,
+    Self: Mul<Output=Self> + MulAssign,
 {
-    fn sqrt(self) -> Self;
-    fn powi(self, n: i32) -> Self;
-    fn sin(self) -> Self;
-    fn cos(self) -> Self;
+    fn max(self, other: Self) -> Self;
+    fn min(self, other: Self) -> Self;
 }
 
-macro_rules! float_func_impl {
-    ($T:ident) => {
-        impl Float for $T {
-            fn sqrt(self) -> Self {
-                Self::sqrt(self)
-            }
-            fn powi(self, n: i32) -> Self {
-                Self::powi(self, n)
-            }
-            fn sin(self) -> Self {
-                Self::sin(self)
-            }
-            fn cos(self) -> Self {
-                Self::cos(self)
-            }
-        }
-    };
+impl Num for f64 {
+    fn max(self, other: Self) -> Self {
+        self.max(other)
+    }
+    fn min(self, other: Self) -> Self {
+        self.min(other)
+    }
 }
-
-float_func_impl!(f32);
-float_func_impl!(f64);
+impl Num for f32 {
+    fn max(self, other: Self) -> Self {
+        self.max(other)
+    }
+    fn min(self, other: Self) -> Self {
+        self.min(other)
+    }
+}
+impl Num for Complex<f64> {
+    fn max(self, other: Self) -> Self {
+        self.max(other)
+    }
+    fn min(self, other: Self) -> Self {
+        self.min(other)
+    }
+}
+impl Num for Complex<f32> {
+    fn max(self, other: Self) -> Self {
+        self.max(other)
+    }
+    fn min(self, other: Self) -> Self {
+        self.min(other)
+    }
+}

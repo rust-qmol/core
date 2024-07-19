@@ -1,4 +1,4 @@
-use crate::{atom::CoordinatesLike, num::Float};
+use crate::{atom::CoordinatesLike, num::float::Float};
 
 use super::Molecule;
 
