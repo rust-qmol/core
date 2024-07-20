@@ -6,8 +6,10 @@ pub mod convert;
 pub mod complex;
 pub mod float;
 
-use std::fmt::Debug;
-use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign};
+use std::{
+    fmt::Debug,
+    ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign},
+};
 
 use crate::num::{complex::Complex, one::One, zero::Zero};
 

@@ -5,8 +5,7 @@ use std::{
     str::FromStr,
 };
 
-use super::one::One;
-use super::zero::Zero;
+use super::{one::One, zero::Zero};
 
 pub trait Float
 where
