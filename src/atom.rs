@@ -4,7 +4,6 @@ mod set;
 
 use crate::num::float::Float;
 
-
 pub type AtomCharg = i8;
 pub type AtomNuc = u8;
 pub type CoordinatesLike<T> = [T; 3];

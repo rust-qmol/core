@@ -1,5 +1,6 @@
 use crate::{
-    atom::{Atom, CoordinatesLike}, num::float::Float,
+    atom::{Atom, CoordinatesLike},
+    num::float::Float,
 };
 
 use super::{rotate::rotate, BigMolNuc, MolCharg, MolNuc, Molecule, Spin};
@@ -27,7 +28,7 @@ impl<T: Float> Molecule<T> {
         [nbeta + self.spin as MolNuc, nbeta]
     }
 
-    pub fn natm(&self) -> usize{
+    pub fn natm(&self) -> usize {
         self.atoms.len()
     }
     pub fn atoms(&self) -> &Vec<Atom<T>> {

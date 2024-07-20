@@ -1,11 +1,10 @@
-mod one;
-mod zero;
+pub mod one;
+pub mod zero;
 
 pub mod convert;
 
-pub mod float;
 pub mod complex;
-
+pub mod float;
 
 use std::fmt::Debug;
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign};
@@ -16,11 +15,11 @@ pub trait Num
 where
     Self: Zero + One,
     Self: Debug + Copy,
-    Self: Neg<Output=Self>,
-    Self: Add<Output=Self> + AddAssign,
-    Self: Sub<Output=Self> + SubAssign,
-    Self: Div<Output=Self> + DivAssign,
-    Self: Mul<Output=Self> + MulAssign,
+    Self: Neg<Output = Self>,
+    Self: Add<Output = Self> + AddAssign,
+    Self: Sub<Output = Self> + SubAssign,
+    Self: Div<Output = Self> + DivAssign,
+    Self: Mul<Output = Self> + MulAssign,
 {
     fn max(self, other: Self) -> Self;
     fn min(self, other: Self) -> Self;

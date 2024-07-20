@@ -3,7 +3,8 @@ use std::str::FromStr;
 use crate::{
     atom::Atom,
     io::PERIODIC_TABLE,
-    mol::Molecule, num::{convert::aatoau, float::Float},
+    mol::Molecule,
+    num::{convert::aatoau, float::Float},
 };
 
 impl<T: Float> Atom<T> {

@@ -8,7 +8,6 @@ use std::{
 use super::one::One;
 use super::zero::Zero;
 
-
 pub trait Float
 where
     Self: Display + Debug,

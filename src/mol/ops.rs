@@ -1,6 +1,5 @@
 use std::ops::Index;
 
-
 use crate::{atom::Atom, num::float::Float};
 
 use super::Molecule;

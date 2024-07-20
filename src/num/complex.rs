@@ -2,6 +2,9 @@ use super::float::Float;
 
 mod ops;
 
+pub type ComplexF32 = Complex<f32>;
+pub type ComplexF64 = Complex<f64>;
+
 #[derive(Debug, Clone, Copy)]
 pub struct Complex<T: Float> {
     pub re: T,
