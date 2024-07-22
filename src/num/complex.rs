@@ -5,7 +5,8 @@ mod ops;
 pub type ComplexF32 = Complex<f32>;
 pub type ComplexF64 = Complex<f64>;
 
-#[derive(Debug, Clone, Copy)]
+#[derive(PartialEq, Copy, Clone, Hash, Debug, Default)]
+#[repr(C)]
 pub struct Complex<T: Float> {
     pub re: T,
     pub im: T,
