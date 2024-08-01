@@ -1,8 +1,11 @@
-use crate::{atom::CoordinatesLike, num::float::Float};
+use crate::{
+    atom::{pos::AtomMove, prop::AtomBasicProp, CoordinatesLike},
+    num::float::Float,
+};
 
 use super::Molecule;
 
-pub(super) fn rotate_matrix<T: Float>(angle: [T; 3]) -> [[T; 3]; 3] {
+pub(super) fn rotate_matrix<T: Float>(angle: CoordinatesLike<T>) -> [CoordinatesLike<T>; 3] {
     let xc = angle[0].cos();
     let xs = angle[0].sin();
     let yc = angle[1].cos();
@@ -22,7 +25,7 @@ pub(super) fn rotate_matrix<T: Float>(angle: [T; 3]) -> [[T; 3]; 3] {
 
 pub(super) fn rotate<T: Float>(
     pos: Vec<CoordinatesLike<T>>,
-    angle: [T; 3],
+    angle: CoordinatesLike<T>,
 ) -> Vec<CoordinatesLike<T>> {
     let rotate_matrix = rotate_matrix(angle);
     pos.iter()
@@ -48,8 +51,13 @@ pub(super) fn rotate<T: Float>(
         .collect()
 }
 
-impl<T: Float> Molecule<T> {
-    pub fn rotate_to_globe(&mut self, angle: [T; 3]) -> &mut Self {
+pub trait MoleculeRotate<T: Float> {
+    fn rotate_to_global(&mut self, angle: CoordinatesLike<T>) -> &mut Self;
+    fn rotate_to_local(&mut self, agnle: CoordinatesLike<T>) -> &mut Self;
+}
+
+impl<T: Float> MoleculeRotate<T> for Molecule<T> {
+    fn rotate_to_global(&mut self, angle: CoordinatesLike<T>) -> &mut Self {
         let rotate_matrix = rotate_matrix(angle);
         self.atoms.iter_mut().for_each(|atm| {
             atm.move_to([
@@ -72,8 +80,8 @@ impl<T: Float> Molecule<T> {
         });
         self
     }
-    pub fn rotate_to_local(&mut self, agnle: [T; 3]) -> &mut Self {
-        self.local_angle
+    fn rotate_to_local(&mut self, agnle: CoordinatesLike<T>) -> &mut Self {
+        self.angle_local
             .iter_mut()
             .zip(agnle.iter())
             .for_each(|(self_angle, angle)| *self_angle = *angle);

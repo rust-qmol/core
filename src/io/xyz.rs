@@ -1,95 +1,94 @@
-use std::str::FromStr;
-
 use crate::{
-    atom::Atom,
+    atom::{prop::AtomBasicProp, Atom},
     io::PERIODIC_TABLE,
-    mol::Molecule,
-    num::{convert::aatoau, float::Float},
+    mol::{prop::MoleculeBasicProp, Molecule},
+    num::{convert::aa2au, float::Float},
 };
 
-impl<T: Float> Atom<T> {
-    pub fn from_xyz(xyz_str: &str) -> Result<Self, <T as FromStr>::Err> {
+pub trait IoXYZ<T: Float>
+where
+    Self: Sized,
+{
+    fn from_xyz(xyz_str: &str) -> Result<Self, &str>;
+    fn from_mul_xyz(xyz_str_list: Vec<&str>) -> Result<Vec<Self>, &str> {
+        let mut out_list = vec![];
+        for xyz_str in xyz_str_list.iter() {
+            out_list.push(match Self::from_xyz(xyz_str) {
+                Ok(object) => object,
+                Err(_) => return Err(""),
+            });
+        }
+        Ok(out_list)
+    }
+
+    fn to_xyz(&self) -> String;
+}
+
+impl<T: Float> IoXYZ<T> for Atom<T> {
+    fn from_xyz(xyz_str: &str) -> Result<Self, &str> {
         let mut split_s = xyz_str.trim().split_whitespace();
         assert_eq!(split_s.clone().count(), 4);
         let nuc = match split_s.next() {
             Some(symbol) => match PERIODIC_TABLE.iter().position(|ele| *ele == symbol) {
-                None => panic!(""),
                 Some(nuc) => (nuc + 1) as u8,
+                None => return Err(""),
             },
-            None => panic!(""),
+            None => return Err(""),
         };
 
-        let pos: Vec<T> = split_s
-            .map(|x_str| match x_str.parse() {
-                Ok(x) => aatoau(x),
-                Err(_) => panic!(""),
-            })
-            .collect();
-        Ok(Atom::new(nuc, 0, [pos[0], pos[1], pos[2]]))
+        let mut pos = [T::one(); 3];
+        for (i, x_str) in split_s.enumerate() {
+            match x_str.parse::<T>() {
+                Ok(x) => pos[i] = aa2au(x),
+                Err(_) => return Err(""),
+            }
+        }
+
+        Ok(Atom::new(nuc, 0, pos))
     }
 
-    pub fn from_mul_xyz(xyz_str: Vec<&str>) -> Result<Vec<Self>, <T as FromStr>::Err> {
-        Ok(xyz_str
-            .iter()
-            .map(|xyz_line| match Atom::<T>::from_xyz(xyz_line) {
-                Ok(atm) => atm,
-                Err(_) => panic!(""),
-            })
-            .collect())
+    fn to_xyz(&self) -> String {
+        String::from(format!(
+            "{}  {:14.7}{:14.7}{:14.7}\n",
+            self.symbol(),
+            self.pos[0],
+            self.pos[1],
+            self.pos[2]
+        ))
     }
 }
 
-impl<T: Float> Molecule<T> {
-    pub fn from_xyz(xyz_str: &str) -> Self {
-        #[allow(unused_assignments)]
-        let mut natm: usize = 0;
+impl<T: Float> IoXYZ<T> for Molecule<T> {
+    fn from_xyz(xyz_str: &str) -> Result<Self, &str> {
+        let natm: usize;
         let xyz_list: Vec<&str> = xyz_str.trim_end().lines().collect();
         match xyz_list[0].parse() {
-            Err(why) => panic!("{:?}", why),
             Ok(v) => natm = v,
+            Err(_) => return Err(""),
         }
 
         let atoms = match Atom::<T>::from_mul_xyz(xyz_list[2..xyz_list.len()].to_vec()) {
             Ok(atms) => atms,
-            Err(_) => panic!(""),
+            Err(_) => return Err(""),
         };
-        assert_eq!(natm, atoms.len());
-
-        Self::new(atoms)
-    }
-
-    pub fn from_mul_xyz(xyz_str: &str) -> Vec<Self> {
-        let xyz_list: Vec<&str> = xyz_str.trim_end().lines().collect();
-
-        let mut nline: usize = 0;
-        let mol_list = vec![];
-        while nline < xyz_list.len() {
-            match xyz_list[nline].parse::<usize>() {
-                Err(why) => panic!("{:?}", why),
-                Ok(v) => nline += v + 2,
-            }
+        if natm != atoms.len() {
+            return Err("");
         }
-        mol_list
+
+        Ok(Self::new(atoms))
     }
 
-    pub fn to_xyz(&self) -> String {
-        let mut xyz_str = String::from(format!(
+    fn to_xyz(&self) -> String {
+        String::from(format!(
             "{}\ncharg:{},spin:{}\n",
             self.atoms().len(),
             self.charg(),
             self.spin()
-        ));
-        self.atoms()
+        )) + &self
+            .atoms()
             .iter()
-            .map(|atom| atom.symbol())
-            .zip(self.atoms_pos_globe().iter())
-            .map(|(sym, xyz)| {
-                String::from(format!(
-                    "{}  {:14.7}{:14.7}{:14.7}\n",
-                    sym, xyz[0], xyz[1], xyz[2]
-                ))
-            })
-            .for_each(|xyz_line| xyz_str += &xyz_line);
-        xyz_str
+            .map(|atom| atom.to_xyz())
+            .collect::<Vec<String>>()
+            .concat()
     }
 }

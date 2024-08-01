@@ -1,5 +1,5 @@
-mod basis;
-mod xyz;
+pub mod bse;
+pub mod xyz;
 
 pub const PERIODIC_TABLE: [&str; 118] = [
     "H", "He", "Li", "Be", "B", "C", "N", "O", "F", "Ne", "Na", "Mg", "Al", "Si", "P", "S", "Cl",
